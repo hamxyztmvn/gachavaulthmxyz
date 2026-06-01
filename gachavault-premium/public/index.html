@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GachaVault - Premium Digital Gacha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-particles" id="particles"></div>
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Channel Popup -->
+  <div class="popup-overlay hidden" id="channelPopup">
+    <div class="popup-glass">
+      <div class="popup-icon">📢</div>
+      <h3 id="popupTitle">Wajib Ikuti Channel Resmi!</h3>
+      <p id="popupDesc">Dapatkan update terbaru dan hadiah eksklusif.</p>
+      <a href="#" target="_blank" class="btn-glass neon" id="popupLink">🔗 Gabung Channel</a>
+      <div class="popup-actions">
+        <button class="btn-text" onclick="followedChannel()">✅ Saya Sudah Mengikuti</button>
+        <button class="btn-text" onclick="closeChannelPopup()">✕ Tutup</button>
+      </div>
+      <label class="checkbox-label"><input type="checkbox" id="dontShowAgain"> Jangan tampilkan lagi</label>
+    </div>
+  </div>
+
+  <div class="app-container">
+    <header class="header-glass">
+      <div class="header-left">
+        <div class="logo" id="logoDisplay">⚡</div>
+        <span class="site-name" id="siteNameDisplay">Gacha<span>Vault</span></span>
+      </div>
+      <div class="header-right">
+        <div class="coin-badge"><span class="coin-icon">🪙</span> <span id="coinBalance">0</span></div>
+        <button class="btn-glass" id="btnLogin" onclick="showModal('loginModal')">Masuk</button>
+        <button class="btn-glass hidden" id="btnDashboard" onclick="navigateTo('dashboard')">📊 Dashboard</button>
+        <button class="btn-glass hidden" id="btnLogout" onclick="logout()">Keluar</button>
+      </div>
+    </header>
+
+    <nav class="nav-glass">
+      <button class="nav-item active" data-tab="gacha">🎰 Gacha</button>
+      <button class="nav-item" data-tab="upload">📤 Sumbang File</button>
+      <button class="nav-item" data-tab="prizes">🎁 Hadiah Saya</button>
+      <button class="nav-item hidden" data-tab="admin" id="navAdmin">⚙️ Admin</button>
+    </nav>
+
+    <main class="main-glass">
+      <section id="tab-gacha" class="tab-content">
+        <h2 class="section-title neon-text">🎰 Mesin Gacha Premium</h2>
+        <div class="gacha-machine">
+          <div class="reels" id="reels">
+            <div class="reel">🎁</div>
+            <div class="reel">💎</div>
+            <div class="reel">⚡</div>
+          </div>
+          <div class="gacha-info" id="gachaInfo">Putar untuk menang!</div>
+          <button class="btn-glass neon" id="gachaBtn" onclick="startGacha()">🎰 GACHA (10 Koin)</button>
+          <div class="cooldown" id="cooldownTimer"></div>
+          <div class="result-card glass" id="gachaResult"></div>
+        </div>
+      </section>
+
+      <section id="tab-upload" class="tab-content hidden">
+        <h2 class="section-title neon-text">📤 Sumbang File untuk Digacha</h2>
+        <div class="upload-area glass">
+          <input type="file" id="fileInput" hidden>
+          <div onclick="document.getElementById('fileInput').click()" class="upload-zone">
+            <div class="upload-icon">📂</div>
+            <p>Klik atau drag & drop file di sini</p>
+            <small id="uploadFileName">Format: ZIP, RAR, APK, PDF, TXT, dll. Maks 2MB</small>
+          </div>
+          <div class="form-group">
+            <input type="text" id="uploadCategory" class="input-glass" placeholder="Kategori (Script, Panel, dll)">
+            <textarea id="uploadDesc" class="input-glass" placeholder="Deskripsi singkat..." rows="2"></textarea>
+            <button class="btn-glass neon" onclick="submitFile()">Upload</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-prizes" class="tab-content hidden">
+        <h2 class="section-title neon-text">🎁 Hadiah Saya</h2>
+        <div id="prizesList" class="prizes-grid"></div>
+      </section>
+
+      <section id="tab-admin" class="tab-content hidden">
+        <h2 class="section-title neon-text">⚙️ Panel Admin</h2>
+        <div id="adminLoginForm" class="glass p-2">
+          <input type="password" id="adminKey" class="input-glass" placeholder="Admin Key">
+          <button class="btn-glass neon" onclick="adminLogin()">Login Admin</button>
+        </div>
+        <div id="adminDashboard" class="hidden"></div>
+      </section>
+
+      <section id="tab-dashboard" class="tab-content hidden">
+        <h2 class="section-title neon-text">📊 Dashboard</h2>
+        <div id="dashboardContent"></div>
+      </section>
+    </main>
+
+    <footer class="footer-glass">
+      <p>Developed by <span class="neon-text"># HamxyzOfficial</span></p>
+    </footer>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal-overlay hidden">
+    <div class="modal-glass">
+      <h3>🔑 Masuk / Daftar</h3>
+      <input type="text" id="authUsername" class="input-glass" placeholder="Username">
+      <input type="email" id="authEmail" class="input-glass" placeholder="Email">
+      <input type="password" id="authPassword" class="input-glass" placeholder="Password">
+      <input type="text" id="authRefCode" class="input-glass" placeholder="Kode Referral (opsional)">
+      <div class="modal-actions">
+        <button class="btn-glass" onclick="login()">Masuk</button>
+        <button class="btn-glass neon" onclick="register()">Daftar</button>
+      </div>
+      <button class="btn-text" onclick="closeModal('loginModal')">Tutup</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
